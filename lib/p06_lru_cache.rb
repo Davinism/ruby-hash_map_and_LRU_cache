@@ -18,19 +18,12 @@ class LRUCache
     # my_link_pointer = returns_link_with_key(key)
     if @map.include?(key)
       link = @map[key]
-      @store.remove(key)
-      @store.insert(link.key, link.val)
-      link.val
+      update_link!(link)
     else #adding new val
-      val = @prc.call(key)
-      new_link = Link.new(key, val)
-      @store.insert(key, val)
-      @map[key] = new_link
+      val = calc!(key)
 
       if count > @max #removing oldest element from linked list cache
-        removed_link_key = @store.first.key
-        @store.remove(removed_link_key)
-        @map.delete(removed_link_key)
+        eject!
       end
       val
     end
@@ -45,12 +38,23 @@ class LRUCache
 
   def calc!(key)
     # suggested helper method; insert an (un-cached) key
+    val = @prc.call(key)
+    new_link = Link.new(key, val)
+    @store.insert(key, val)
+    @map[key] = new_link
+    val
   end
 
   def update_link!(link)
     # suggested helper method; move a link to the end of the list
+    @store.remove(link.key)
+    @store.insert(link.key, link.val)
+    link.val
   end
 
   def eject!
+    removed_link_key = @store.first.key
+    @store.remove(removed_link_key)
+    @map.delete(removed_link_key)
   end
 end

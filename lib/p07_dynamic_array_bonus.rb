@@ -46,6 +46,14 @@ class DynamicArray
   end
 
   def push(val)
+
+    unless @count == capacity
+      @store[@count] = val
+      @count += 1
+    else
+
+    end
+
   end
 
   def unshift(val)
@@ -81,5 +89,8 @@ class DynamicArray
   private
 
   def resize!
+    new_array = StaticArray.new(capacity * 2)
+
+
   end
 end
